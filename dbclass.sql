@@ -644,3 +644,43 @@ select * from orders where o_orderdate between str_to_date('2023-07-04', '%Y-%m-
 -- 22. 7월 4일 ~ 7일 사이에 주문하지 않은 도서의 주문번호 조회
 select * from orders where o_orderdate not between '2023-07-04' AND '2023-07-07';
 select * from orders where o_orderdate not between str_to_date('2023-07-04', '%Y-%m-%d') AND str_to_date('2023-07-07', '%Y-%m-%d');
+
+-- 23. 고객, 주문 테이블 조인하여 고객번호 순으로 정렬
+select * 
+from customer c, orders o
+where c.id = o.id
+order by customer_id asc;
+
+-- 24. 고객이름(CUSTOMER), 고객이 주문한 도서 가격(ORDERS) 조회 
+select c_name, o_saleprice
+from customer c, orders o
+where c.id = o.id;
+
+-- 25. 고객별(GROUP)로 주문한 도서의 총 판매액(SUM)과 고객이름을 조회하고 조회 결과를 가나다 순으로 정렬 
+select o.customer_id, sum(o_saleprice), c_name
+from orders o, customer c 
+where o.id = c.id
+group by o.customer_id, c_name
+order by c_name asc;
+
+-- 26. 고객명과 고객이 주문한 도서명을 조회(3테이블 조인)
+select c_name, b_bookname
+from book b, customer c, orders o
+where b.id = o.id AND c.id = o.id;
+
+-- 27. 2만원(SALEPRICE) 이상 도서를 주문한/ 고객의 이름(c_name)과 도서명(b_bookname)을 조회 
+select c_name, b_bookname
+from customer c, book b, orders o 
+where c.id = o.id AND o.id = b.id AND o_saleprice >= 20000;
+
+-- 28. 손흥민 고객(customer)의 총 구매액(o_saleprice)과 고객명(c_name)을 함께 조회
+select sum(o_saleprice), c_name
+from customer c, orders o
+where c.id = o.customer_id 
+AND c_name = '손흥민';
+
+-- 29. 손흥민 고객의 총 구매수량과 고객명을 함께 조회
+select count(o_saleprice), c_name
+from orders o, customer c
+where o.customer_id = c.id
+AND c_name = '손흥민';
