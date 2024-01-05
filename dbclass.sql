@@ -652,26 +652,34 @@ where c.id = o.id
 order by customer_id asc;
 
 -- 24. 고객이름(CUSTOMER), 고객이 주문한 도서 가격(ORDERS) 조회 
-select c_name, o_saleprice
+select c.c_name, o.o_saleprice
 from customer c, orders o
-where c.id = o.id;
+where c.id = o.customer_id;
 
 -- 25. 고객별(GROUP)로 주문한 도서의 총 판매액(SUM)과 고객이름을 조회하고 조회 결과를 가나다 순으로 정렬 
+-- ↓↓나의 풀이↓↓
 select o.customer_id, sum(o_saleprice), c_name
 from orders o, customer c 
-where o.id = c.id
-group by o.customer_id, c_name
+where o.customer_id = c.id
+group by c_name
 order by c_name asc;
+
+-- ↓↓선생님 풀이↓↓
+select c.c_name, sum(o.o_saleprice) 
+from customer c, orders o
+where c.id = o.customer_id
+group by c.c_name
+order by c.c_name asc;
 
 -- 26. 고객명과 고객이 주문한 도서명을 조회(3테이블 조인)
 select c_name, b_bookname
 from book b, customer c, orders o
-where b.id = o.id AND c.id = o.id;
+where b.id = o.book_id AND c.id = o.customer_id;
 
 -- 27. 2만원(SALEPRICE) 이상 도서를 주문한/ 고객의 이름(c_name)과 도서명(b_bookname)을 조회 
 select c_name, b_bookname
 from customer c, book b, orders o 
-where c.id = o.id AND o.id = b.id AND o_saleprice >= 20000;
+where c.id = o.customer_id AND o.book_id = b.id AND o_saleprice >= 20000;
 
 -- 28. 손흥민 고객(customer)의 총 구매액(o_saleprice)과 고객명(c_name)을 함께 조회
 select sum(o_saleprice), c_name
@@ -684,3 +692,33 @@ select count(o_saleprice), c_name
 from orders o, customer c
 where o.customer_id = c.id
 AND c_name = '손흥민';
+
+-- 30. 가장 비싼 도서의 이름을 조회
+ select b_bookname from book where b_price = (select max(b_price) from book);
+ 
+-- 31. 책을 구매한 이력이 있는 고객의 이름을 조회
+select distinct c_name 
+from customer c
+where id in(select customer_id from orders);
+
+-- 32. 도서의 가격(PRICE)과 판매가격(SALEPRICE)의 차이가 가장 많이 나는 주문 조회 
+select *
+from orders o, book b 
+where b.id = o.book_id
+AND (b.b_price - o.o_saleprice) = (select max(b.b_price - o.o_saleprice) from orders o, book b where b.id = o.book_id);
+
+-- 33. 고객별 평균 구매 금액이 도서의 판매 평균 금액 보다 높은 고객의 이름 조회 
+select c_name, avg(o.o_saleprice)
+from customer c, orders o
+where c.id = o.customer_id 
+group by c_name 
+having avg(o_saleprice) > (select avg(o_saleprice) from orders);
+
+-- 34. 고객번호가 5인 고객의 주소를 대한민국 인천으로 변경 
+update customer set c_address = '대한민국 인천' where id = 5;
+
+-- 35. 김씨 성을 가진 고객이 주문한 총 판매액 조회
+select sum(o_saleprice) 
+from orders o
+where customer_id
+in (select id from customer where c_name like '김%');
