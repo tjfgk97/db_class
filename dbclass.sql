@@ -805,6 +805,28 @@ create table board_file_table(
     constraint fk_board_file_board_id foreign key(board_id) references board_table(id) on delete cascade
 );
 
+-- 회원 기능
+-- 1. 회원가입(임의의 회원3명 가입)
+insert into member_table(member_email, member_name, member_password) values('aa@aa.com', 'aa', '1234');
+insert into member_table(member_email, member_name, member_password) values('bb@bb.com', 'bb', '1234');
+insert into member_table(member_email, member_name, member_password) values('cc@cc.com', 'cc', '1234');
+-- 2. 이메일 중복체크 
+select member_email from member_table;
+-- 3. 로그인
+select member_email, member_password from member_table;
+-- 4. 전체 회원 목록 조회 
+select * from member_table;
+-- 5. 특정 회원만 조회 
+select * from member_table where member_name like '%b%';
+-- 6. 내정보 수정하기(6.1, 6.2에 해당하는 쿼리문작성)
+-- 6.1 회원정보 수정화면 요청(회원정보 수정 페이지를 보여준다고 가정했을 때 필요한 쿼리) 
+select * from member_table where member_email = 'aa@aa.com' AND member_password = '1234';
+-- 6.2 회원정보 수정 처리(비밀번호를 변경한다는 상황)
+update member_table set member_password = '4321' where id = 1;
+-- 7. 회원 삭제 또는 탈퇴 
+delete from member_table where id = 2;
+
+select * from member_table;
 
 
 
