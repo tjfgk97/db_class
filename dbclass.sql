@@ -811,16 +811,17 @@ insert into member_table(member_email, member_name, member_password) values('aa@
 insert into member_table(member_email, member_name, member_password) values('bb@bb.com', 'bb', '1234');
 insert into member_table(member_email, member_name, member_password) values('cc@cc.com', 'cc', '1234');
 -- 2. 이메일 중복체크 
-select member_email from member_table;
+select member_email from member_table where member_email = 'aa@aa.com';
 -- 3. 로그인
-select member_email, member_password from member_table;
+select * from member_table where member_email = 'aa@aa.com' AND member_password = '1234';
 -- 4. 전체 회원 목록 조회 
 select * from member_table;
 -- 5. 특정 회원만 조회 
-select * from member_table where member_name like '%b%';
+select * from member_table where member_email = 'aa@aa.com';
+select * from member_table where id = 1;
 -- 6. 내정보 수정하기(6.1, 6.2에 해당하는 쿼리문작성)
 -- 6.1 회원정보 수정화면 요청(회원정보 수정 페이지를 보여준다고 가정했을 때 필요한 쿼리) 
-select * from member_table where member_email = 'aa@aa.com' AND member_password = '1234';
+select * from member_table where id = 1;
 -- 6.2 회원정보 수정 처리(비밀번호를 변경한다는 상황)
 update member_table set member_password = '4321' where id = 1;
 -- 7. 회원 삭제 또는 탈퇴 
