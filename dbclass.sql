@@ -825,11 +825,72 @@ select * from member_table where id = 1;
 -- 6.2 회원정보 수정 처리(비밀번호를 변경한다는 상황)
 update member_table set member_password = '4321' where id = 1;
 -- 7. 회원 삭제 또는 탈퇴 
-delete from member_table where id = 2;
+delete from member_table where id = 4;
 
 select * from member_table;
 
+-- 게시글 카테고리 
+-- 게시판 카테고리는 자유게시판, 공지사항, 가입인사 세가지가 있음.
+-- 카테고리 세가지 미리 저장
+insert into category_table(category_name) values('자유게시판');
+insert into category_table(category_name) values('공지사항');
+insert into category_table(category_name) values('가입인사');
 
+
+-- 게시판 기능 
+-- 1. 게시글 작성(파일첨부 x) 3개 이상 
+insert into board_table(board_title, board_writer, board_contents, member_id, category_id) values('ㅎㅇ', 'user1', 'ㅎㅇㅎㅇ', 1, 1);
+insert into board_table(board_title, board_writer, board_contents, member_id, category_id) values('ㅂㅇ', 'user2', 'ㅂㅇㅂㅇ', 1, 1);
+insert into board_table(board_title, board_writer, board_contents, member_id, category_id) values('ㅎㅇㄹ', 'user3', 'ㅎㅇㄹㄱ',1 ,1);
+
+-- 1번 회원이 자유게시판 글 2개, 공지사항 글 1개 작성 
+insert into board_table(board_title, board_writer, board_contents, member_id, category_id) values('방가', '1번횐','방가워요', 1 ,1);
+insert into board_table(board_title, board_writer, board_contents, member_id, category_id) values('하이용', '1번횐', '하이하이용',1 ,1);
+insert into board_table(board_title, board_writer, board_contents, member_id, category_id) values('공지입니다.', '1번횐', '이상입니다.',1 ,2);
+-- 5번 회원이 자유게시판 글 3개 작성
+insert into board_table(board_title, board_writer, board_contents, member_id, category_id) values('ㅎㅎ', '2번횐','ㅎㅎㅎㅎ', 5 ,1);
+insert into board_table(board_title, board_writer, board_contents, member_id, category_id) values('ㅋㅋ', '2번횐','ㅋㅋㅋㅋ', 5 ,1);
+insert into board_table(board_title, board_writer, board_contents, member_id, category_id) values('ㅂㅂ', '2번횐','ㅂ2ㅂ2', 5,1);
+-- 3번 회원이 가입인사 글 1개 작성 
+insert into board_table(board_title, board_writer, board_contents, member_id, category_id) values('안니옹하세요~', '3번횐', '방가와요', 3, 3);
+-- 1.1. 게시글 작성(파일첨부 o)
+insert into board_table(board_title, board_writer, board_contents, board_file_attached, member_id, category_id) values('ㅎ2', 'user4', 'ㅎ2ㅎ2', 1, 1 ,1);
+-- 5번 회원이 파일있는 자유게시판 글 2개 작성
+insert into board_table(board_title, board_writer, board_contents, board_file_attached, member_id, category_id) values('11', '2번횐', '111', 1, 5, 1);
+insert into board_table(board_title, board_writer, board_contents, board_file_attached, member_id, category_id) values('22', '2번횐', '222', 1, 5, 1);
+-- 2. 게시글 목록 조회 
+-- 2.1 전체글 목록 조회
+select * from board_table;
+-- 2.2 자유게시판 목록 조회 
+select * from board_table b, category_table c 
+where b.category_id = c.id
+AND category_name = '자유게시판';
+-- 2.3 공지사항 목록 조회 
+select * from board_table b, category_table c 
+where b.category_id = c.id
+AND category_name = '공지사항';
+-- 2.4 목록 조회시 카테고리 이름도 함께 나오게 조회
+select * from board_table b, category_table c 
+where b.category_id = c.id;
+-- 3. 2번 게시글 조회 (조회수 처리 필요함)
+-- select * from board_table 
+-- 3.1. 파일 첨부된 게시글 조회 (게시글 내용과 파일을 함께)
+select * from board_table where board_file_attached = 1;
+
+select * from board_table bt, board_file_table bf 
+where bt.id = bf.board_id
+AND bt.board_file_attached = 1;
+-- 4. 1번 회원이 자유게시판에 첫번째로 작성한 게시글의 제목, 내용 수정
+
+-- 5. 2번 회원이 자유게시판에 첫번째로 작성한 게시글 삭제 
+-- 7. 페이징 처리(한 페이지당 글 3개씩)
+-- 7.1. 첫번째 페이지
+-- 7.2. 두번째 페이지
+-- 7.3. 세번째 페이지 
+-- 8. 검색(글제목 기준)
+-- 8.1 검색결과를 오래된 순으로 조회 
+-- 8.2 검색결과를 조회수 내림차순으로 조회 
+-- 8.3 검색결과 페이징 처리
 
 
 
