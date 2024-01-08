@@ -890,13 +890,28 @@ update board_table set board_title = '안녕하세요_수정', board_contents = 
 -- 5. 2번 회원이 자유게시판에 첫번째로 작성한 게시글 삭제 
 delete from board_table where id = 5; 
 -- 7. 페이징 처리(한 페이지당 글 3개씩)
+
+-- 한 페이지 당 글 3개씩
+select * from board_table order by id desc;
+select * from board_table order by id desc limit 0, 3; -- (조회결과 기준 0부터 시작한다.(index와 비슷))
+select * from board_table order by id desc limit 3, 3;
+select * from board_table order by id desc limit 6, 3;
+-- 한 페이지 당 글 5개씩
+select * from board_table order by id desc limit 0, 5;
+select * from board_table order by id desc limit 5, 5;
+select * from board_table order by id desc limit 10, 5;
+-- 한 페이지 당 3개씩 출력하는 경우 전체 글 갯수가 20개라면 필요한 페이지 갯수는? 7개
+select count(*) from board_table;
 -- 7.1. 첫번째 페이지
 -- 7.2. 두번째 페이지
 -- 7.3. 세번째 페이지 
 -- 8. 검색(글제목 기준)
+select * from board_table where board_title like '%오늘%';
 -- 8.1 검색결과를 오래된 순으로 조회 
+select * from board_table where board_title like '%오늘%' order by id asc;
 -- 8.2 검색결과를 조회수 내림차순으로 조회 
+select * from board_table where board_title like '%오늘%' order by board_hits desc;
 -- 8.3 검색결과 페이징 처리
-
+select * from board_table where board_title like '%오늘%' order by board_hits desc limit 0, 3;
 
 
