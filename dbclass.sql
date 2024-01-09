@@ -1010,7 +1010,7 @@ case	when grade = 'A' then 'VIP'
 create table tbl_member_202005(
 	m_no char(1) primary key,
     m_name varchar(20),
-    p_cde char(2),
+    p_code char(2),
     p_school char(1),
     m_jumin char(13),
     m_city varchar(20)
@@ -1074,3 +1074,20 @@ insert into tbl_party_202005 values ('P2', 'B정당', '2010-02-01', '명대표',
 insert into tbl_party_202005 values ('P3', 'C정당', '2010-03-01', '기대표', '02', '1111', '0003');
 insert into tbl_party_202005 values ('P4', 'D정당', '2010-04-01', '옥대표', '02', '1111', '0004');
 insert into tbl_party_202005 values ('P5', 'E정당', '2010-05-01', '임대표', '02', '1111', '0005');
+
+-- 후보조회
+-- concat() : 문자열을 이어 붙일 때
+-- substr() : 문자열의 특정 범위를 잘라낼 때
+-- 주민번호 : 2401093123123	240109-3123123
+select m_no as '후보번호', m_name as '성명', p_name as '소속정당', 
+case	when p_school = '1' then '고졸'
+		when p_school = '2' then '학사'
+        when p_school = '3' then '석사'
+        when p_school = '4' then '박사'
+	end as '학력',
+    concat(substr(m_jumin, 1, 6), '-', substr(m_jumin, 7, 7)) as '주민번호',
+    m_city as '지역구',
+    concat(p_tel1, '-', p_tel2, '-', p_tel3) as '대표번호'
+    from tbl_member_202005 tm, tbl_party_202005 tp
+    where tm.p_code = tp.p_code;
+    
