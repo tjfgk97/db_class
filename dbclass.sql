@@ -1157,4 +1157,10 @@ select v_name as '성명',
                 AND v_area = '제1투표장'
                 order by substr(v_jumin, -2);
 				
-ct
+-- 후보자 등수
+select tv.m_no as '후보번호', m_name as '성명', count(v_confirm) as '총 투표건수'
+from tbl_member_202005 tm, tbl_vote_202005 tv
+where tm.m_no = tv.m_no
+AND v_confirm = 'Y'
+group by tv.m_no
+order by count(v_confirm) desc, tv.m_no asc;
